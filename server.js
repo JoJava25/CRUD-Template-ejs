@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const Item = require('./models/Item');
 
 const app = express()
 
@@ -37,7 +38,41 @@ app.get('/item', async (req, res) => {
     res.render('item', {items})
 })
 
-//Listen for port
+//Create
+app.post('/item', async (req, res) => {
+    const newItem = new Item(req.body)
+    try {
+        await newItem.save()
+        res.redirect('/item')
+    } catch(err) {
+        res.redirect('/item?error=true')
+    }
+})
+
+//Update
+app.post('/item/update/:id', async (req, res) => {
+    const {id} = req.params
+    const {name, description} = req.body
+    try {
+       await Item.findByIdAndUpdate(id, {name, description})
+       res.redirect('/item')
+    } catch(err) {
+        res.redirect('/item?error=true')
+    }
+})
+
+//Delete
+app.delete('/item/delete/:id', async (req, res) => {
+    const {id} = req.params
+    try {
+       await Item.findByIdAndDelete(id)
+       res.status(200).json({ message: 'Item was successfully deleted'})
+    } catch(err) {
+        res.redirect('/item?error=true')
+    }
+})
+
+//Start the server
 app.listen(port, () => {
     console.log(`Server running on: http://localhost:${port}`)
 })
