@@ -19,10 +19,11 @@ function startCarousel(){
 
 //Handle edit requests
 function editItem(id, name, description){
+    console.log(id)
     document.getElementById('updateId').value = id
 
-    document.getElementById('updateName').value = name
-    document.getElementById('updateDescription').value = description
+    document.getElementById("updateName").value = name
+    document.getElementById("updateDescription").value = description
 
     document.getElementById('updateForm').action = `/item/update/${id}`
 }
@@ -30,8 +31,8 @@ function editItem(id, name, description){
 //Handle delete requests
 async function deleteItem(id){
     try{
-        const response = await fetch(`http://localhost:4000/item/delete/${id}` , {
-            method: 'DELETE'
+        const response = await fetch(`http://localhost:3500/item/delete/${id}` , {
+            method: 'DELETE' ,
         })
         if(response.ok){
             location.reload()
